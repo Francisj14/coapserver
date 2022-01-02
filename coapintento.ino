@@ -30,8 +30,8 @@ void callback_dist(coapPacket &packet, IPAddress ip, int port, int obs);
 coapServer coap;
 
 //WiFi connection info
-const char* ssid = "NETLIFE-DANIEL";
-const char* password = "1802933083";
+const char* ssid = "---"; //Nombre ed red
+const char* password = "--";  //Contraseña de red
 
 // LED STATE
 bool LEDSTATE;
@@ -72,7 +72,7 @@ void callback_hum(coapPacket *packet, IPAddress ip, int port,int obs) {
  
 }
 
-// CoAP server endpoint URL 3
+// CoAP server endpoint URL 2
 void callback_dist(coapPacket *packet, IPAddress ip, int port,int obs) {
   Serial.println("humedad");
 
@@ -90,37 +90,34 @@ void callback_dist(coapPacket *packet, IPAddress ip, int port,int obs) {
  
 }
 
-
-
-
-
 void setup() {
   yield();
-  //serial begin
-  Serial.begin(115200);
-  dht.begin();
-  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
-  WiFi.begin(ssid, password);
-  Serial.println(" ");
+    //serial begin
+    Serial.begin(115200);
+    dht.begin();
+    pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+    pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+    WiFi.begin(ssid, password);
+    Serial.println(" ");
 
   // Connect to WiFi network
-  Serial.println();
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
+    Serial.println();
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+    WiFi.begin(ssid, password);
+    
   while (WiFi.status() != WL_CONNECTED) {
     //delay(500);
     yield();
     Serial.print(".");
   }
-  Serial.println("");
-  Serial.println("WiFi connected");
-  // Print the IP address
-  Serial.println(WiFi.localIP());
+    Serial.println("");
+    Serial.println("WiFi connected");
+    // Print the IP address
+    Serial.println(WiFi.localIP());
 
-//////////////////////////
+  //Aplicacion del sensor
            hum = dht.readHumidity();
           // Leyendo temperatura en Celsius (es la unidad de medición por defecto)
            temp = dht.readTemperature();
@@ -134,27 +131,24 @@ void setup() {
             strcpy(humidityTemp, "Fallido");
           }
 
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+          digitalWrite(trigPin, LOW);
+          delayMicroseconds(2);
+          digitalWrite(trigPin, HIGH);
+          delayMicroseconds(10);
+          digitalWrite(trigPin, LOW);
 
-// Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+    duration = pulseIn(echoPin, HIGH);
 
-// Calculating the distance
-  dist= duration*0.034/2;
-
-////////////////////
-
+  // Calculating the distance
+    dist= duration*0.034/2;
   
   // add server url endpoints.
   // can add multiple endpoint urls.
-  coap.server(callback_temp, "temperatura");
-  coap.server(callback_hum, "humedad");
-  coap.server(callback_dist, "distancia");
- // coap.server(callback_text,"text");
+       coap.server(callback_temp, "temperatura");
+       coap.server(callback_hum, "humedad");
+       coap.server(callback_dist, "distancia");
+    // coap.server(callback_text,"text");
 
   // start coap server/client
   coap.start();
