@@ -53,8 +53,8 @@ while True:
             #Conexión a la base datos
             Host = "localhost"  
             User = "root"       
-            Password = "joel123"           
-            Database = "sensores"
+            Password = "" #Contraseña           
+            Database = "sensores" #base de datos
             conn  = pymysql.connect(host=Host, user=User, password=Password, database=Database)
             cur  = conn.cursor()
             #today = date.today()
